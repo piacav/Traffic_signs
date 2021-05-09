@@ -28,9 +28,9 @@ path_full = Path('Dataset', 'GTSDB', 'Full')
 
 
 def image_load(path):
-    names = [] # Nomi delle immagini es. '00000.ppm'
-    imgs = [] # Immagini aperte con Image.open es. es. <PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=1360x800 at 0x7F968779DF40>
-    ir = [] # Immagini lette con skimage es. [array([[[255, 255, 255], [255, 255, 255], [255, 255, 255], ...]
+    names = []  # Nomi delle immagini es. '00000.ppm'
+    imgs = []  # Immagini aperte con Image.open es. es. <PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=1360x800 at 0x7F968779DF40>
+    ir = []  # Immagini lette con skimage es. [array([[[255, 255, 255], [255, 255, 255], [255, 255, 255], ...]
 
     for file in sorted(os.listdir(path)):
         if Path(path, file).is_file() and Path(path, file).suffix == '.ppm':
@@ -58,8 +58,8 @@ Ritorna:
 
 ex_train = Path('Dataset', 'GTSDB', 'Metadata', 'ex.txt')
 
-def annotation_preprocess(path):
 
+def annotation_preprocess(path):
     annotations_dict = {}
     annotations_list = []
     with open(path) as file:

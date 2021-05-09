@@ -1,4 +1,5 @@
 import tkinter as tk
+from pathlib import Path
 from tkinter import *
 from tkinter import filedialog
 
@@ -7,7 +8,6 @@ import numpy as np
 import pandas as pd
 from PIL import ImageTk, Image
 from keras.models import load_model
-from pathlib import Path
 
 model = load_model(str(Path('Models', 'class_cnn_220210503T2208')))
 names = pd.read_csv("labels.csv")["Name"].values
@@ -39,6 +39,7 @@ def preprocessing(image):
     return image
 
 
+# noinspection PyGlobalUndefined
 def classify(file_path):
     global label_packed
     image = cv2.imread(file_path)
