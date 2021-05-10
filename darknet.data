@@ -2,4 +2,4 @@ classes = 1
 train  = /Users/piacavasinni/PycharmProjects/Traffic_signs_YOLOv3/Dataset/GTSDB_Train/train_path.txt
 valid  = /Users/piacavasinni/PycharmProjects/Traffic_signs_YOLOv3/Dataset/GTSDB_Train/val_path.txt
 names = /Users/piacavasinni/PycharmProjects/Traffic_signs_YOLOv3/classes.names
-backup = /Users/piacavasinni/PycharmProjects/Traffic_signs_YOLOv3/classes.names
+backup = /Users/piacavasinni/PycharmProjects/Traffic_signs/Models/backup
