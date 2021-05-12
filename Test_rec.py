@@ -115,7 +115,7 @@ def test_single_img(image, pic):
         probability_value = np.amax(prediction)
 
         # SHOW PREDICTION
-        cv2.imshow("Result", original_img)
+        # cv2.imshow("Result", original_img)
 
         if probability_value > threshold and class_index[0] == gt_test[int(pic)]:
             detected_class = str(class_index[0]) + ' - ' + str(names[class_index[0]])
@@ -127,8 +127,27 @@ def test_single_img(image, pic):
         print('Model:', model_type, '\nScore:', probability_value, '\n' + ('=' * 100))
 
     # CHANGE IMAGE IN VISUALIZATION
-    if cv2.waitKey(0) and 0xFF == ord('q'):
-        return
+    # if cv2.waitKey(0) and 0xFF == ord('q'):
+    #     return
+        return str(class_index[0]) + ' - ' + str(names[class_index[0]]), probability_value
+
+
+def test_single_img2(image):
+    # PREDICT IMAGE
+    # Only one model between class_cnn and class_cnn_2
+    prediction = model.predict(image)
+    class_index = model.predict_classes(image)
+    probability_value = np.amax(prediction)
+
+    if probability_value > threshold:
+        detected_class = str(class_index[0]) + ' - ' + str(names[class_index[0]])
+        print('DETECTED CORRECT CLASS:', detected_class)
+    else:
+        print('DETECTION FAILED:', class_index[0], '-', names[class_index[0]])
+
+    print('Model:', model_type, '\nScore:', probability_value, '\n' + ('=' * 100))
+
+    return str(class_index[0]) + ' - ' + str(names[class_index[0]]), probability_value
 
 
 def compute_metrics(test_set, t):
@@ -174,7 +193,7 @@ def compute_metrics(test_set, t):
         #print(cr, TN, FP, FN, TP, TPR, TNR, PPV, NPV, FAR, FRR, FDR, ACC)
         return FRR, FAR, ACC, t
 
-
+''' 
 # READ IMAGE
 data = []
 for picture in sorted(os.listdir(test_set_dir)):
@@ -203,4 +222,4 @@ t = 0
 for t in range(0, 100, 20):
     print(t)
     metriche.append(compute_metrics(X_test, t/100))
-print(metriche)
+print(metriche)'''

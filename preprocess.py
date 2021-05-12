@@ -75,4 +75,16 @@ def annotation_preprocess(path):
                 annotations_dict[id].append((int(temp[1]), int(temp[2]), int(temp[3]), int(temp[4]), int(temp[5])))
     return annotations_dict, annotations_list
 
+
 # print(annotation_preprocess(gt_train)[1])
+
+def ppm2jpg(path, file):
+    # path = Path('Dataset', 'GTSDB', 'Train')
+    # path2 = Path('Dataset', 'GTSDB', 'Train2')
+
+    # for file in os.listdir(path):
+    im = Image.open(Path(path, file))
+    print(file[:-4] + '.jpg')
+    im.save(Path(path, 'lello.jpg'))
+
+# ppm2jpg('Dataset/GTSRB_Test', '00000.ppm')
