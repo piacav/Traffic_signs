@@ -34,7 +34,7 @@ model = None
 model1 = None
 model2 = None
 
-# IMPORT THE TRAINED MODEL
+# import the trained model
 if model_type == 'class_cnn':
     model = load_model(str(Path(model_dir, model_name[0])), custom_objects={'DropBlock2D': DropBlock2D})  # class_cnn
     model.summary()

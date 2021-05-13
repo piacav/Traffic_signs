@@ -27,7 +27,7 @@ test_ratio = 0.2
 validation_ratio = 0.2
 model_type = "class_cnn_2"  # "class_cnn_2" for the second type
 
-# Importing of the Images
+# Importing Images
 class_count = 0
 images = []
 classes = []
@@ -186,7 +186,7 @@ score = model.evaluate(X_test, y_test, verbose=0)
 print('Test Score:', score[0])
 print('Test Accuracy:', score[1])
 
-# STORE THE MODEL AS A PICKLE OBJECT
+# STORE THE MODEL
 name = os.path.join(model_dir, "{}{:%Y%m%dT%H%M}".format(model_type, datetime.datetime.now()))
 print("Creation model:", name)
 model.save(name)

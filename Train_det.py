@@ -31,7 +31,7 @@ danger = [11, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
 mandatory = [33, 34, 35, 36, 37, 38, 39, 40]
 other = [6, 12, 13, 14, 17, 32, 41, 42]
 
-# copying id column of data into df
+# copying id column of data into dataframe
 df = train_set_tot['id']
 train_set_tot['Object Name'] = train_set_tot['id']
 # assigning new labels, 1 implies prohibitory,2 implies danger,3 implies mandatory and 4 implies other.

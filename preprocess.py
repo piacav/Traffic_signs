@@ -16,12 +16,12 @@ def split_trainset(path):
 
 
 '''
-Carica le immagini e crea una lista con i nomi e una lista con le immagini caricate
-Parametri:
-    path    : il percorso della cartella da cui caricare le immagini
-Ritorna  :
-    imgs    : lista che contiene tutte le immagini caricate
-    names   : lista che contiene i nomi di tutte le immagini
+Loads the images and creates a list of names and a list of loaded images
+Parameters:
+    path    : path of the folder from which images have to be loaded
+Returns  :
+    imgs    : list of all loaded images
+    names   : list of names of all images
 '''
 
 path_full = Path('Dataset', 'GTSDB', 'Full')
@@ -46,14 +46,15 @@ def image_load(path):
 #     print(el, name)
 # print(image_load(path_full))
 
+
 '''
-Costruisce le annotazioni delle immagini per il training a partire da un file con semicolon separated values
-creando un dizionario in cui per ogni elemento, la chiave è il nome del file e il valore è una lista che contiene
-le tuple delle coordinate dei bounding boxes dei cartelli presenti nella foto
-Parametri:
-    path        : percorso del file di testo che contiene le annotazioni
-Ritorna:
-    annotations : dizionario finale che contiene le annotazioni dei cartelli
+Builds images annotations for the training process from a semicolon-separated-values file.
+Creates a dictionary with filenames as keys and values lists of tuples containing bounding box coordinates of signs
+in the image.
+Parameters:
+    path        : annotation file path
+Returns:
+    annotations : final dictionary containing signs annotations
 '''
 
 ex_train = Path('Dataset', 'GTSDB', 'Metadata', 'ex.txt')
@@ -77,6 +78,13 @@ def annotation_preprocess(path):
 
 
 # print(annotation_preprocess(gt_train)[1])
+
+'''
+Converts a .ppm image and saves it in .jpg format
+Parameters:
+    path:   image path
+    file:   image file name
+'''
 
 def ppm2jpg(path, file):
     # path = Path('Dataset', 'GTSDB', 'Train')

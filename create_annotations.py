@@ -11,6 +11,15 @@ train_path = str(Path('Dataset', 'GTSDB_Train', 'train_path.txt'))
 
 
 # <object-class> <x> <y> <width> <height>
+
+'''
+Creates annotations for image training with darknet/yolov3
+For every image, creates a text file in which every row represents a sign in the image.
+The row has this form: <object-class> <x> <y> <width> <height>
+Parameters:
+    path:   path of the annotation file
+'''
+
 def create_annotation(path):
     annotation_dict, _ = annotation_preprocess(path)
     for k in annotation_dict.keys():
@@ -30,6 +39,13 @@ def create_annotation(path):
             f.write(line)
         f.close()
 
+
+'''
+Creates a text file containing the path of each image file
+Parameters:
+    gt:     ground truth file path
+    path:   path of the new text file
+'''
 
 def create_path_txt(gt, path):
 
