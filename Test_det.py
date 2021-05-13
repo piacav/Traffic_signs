@@ -25,9 +25,9 @@ if args.video:
 elif args.image:
     media = args.image
 else:
-    # To test a specific image or video
-    media = str(Path('Dataset', 'GTSDB_Test', '00673.jpg'))  # str(Path('Dataset', 'GTSDB_video_2s.mp4'))
-    args.image = media  # for video change with args.video = media
+    # To test a specific image
+    media = str(Path('Dataset', 'GTSDB_Test', '00673.jpg'))
+    args.image = media
 
 # Input shape for recognition cnn
 input_shape = (48, 48)
@@ -143,21 +143,20 @@ winName = 'Deep learning object detection in OpenCV'
 cv.namedWindow(winName, cv.WINDOW_NORMAL)
 
 cap = None
-outputFile = "yolo_out_py.avi"
+outputFile = str(Path('Output', 'recognition_image.jpg'))
 if (args.image):
     # Open the image file
     if not os.path.isfile(args.image):
         print("Input image file ", args.image, " doesn't exist")
         sys.exit(1)
     cap = cv.VideoCapture(args.image)
-    outputFile = '/Users/piacavasinni/PycharmProjects/Traffic_signs/Results_img/' + 'result_yolo_out_py.jpg'
 elif (args.video):
     # Open the video file
     if not os.path.isfile(args.video):
         print("Input video file ", args.video, " doesn't exist")
         sys.exit(1)
     cap = cv.VideoCapture(args.video)
-    outputFile = args.video[:-4] + '_yolo_out_py.avi'
+    outputFile = str(Path('Output', 'recognition_video.avi'))
 
 
 # Get the video writer initialized to save the output video
@@ -199,7 +198,7 @@ while cv.waitKey(1) < 0:
     if args.video:
         vid_writer.write(frame.astype(np.uint8))
     else:
-        cv.imwrite(str(Path('Output', 'recognition.jpg')), frame.astype(np.uint8))
+        cv.imwrite(outputFile, frame.astype(np.uint8))
 
     # Uncomment the following lines to show recognition image
     # cv.imshow(winName, frame)
