@@ -31,7 +31,7 @@ model_type = "class_cnn_2"  # "class_cnn_2" for the second type
 class_count = 0
 images = []
 classes = []
-number_classes = len(os.listdir(dataset)) - 1
+number_classes = len(os.listdir(dataset))
 print("Total Classes Detected:", number_classes)
 print("Importing Classes...")
 for directory in range(number_classes):

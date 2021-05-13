@@ -196,10 +196,11 @@ while cv.waitKey(1) < 0:
     # cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
     # Write the frame with the detection boxes
-    if (args.image):
-        cv.imwrite(outputFile, frame.astype(np.uint8))
-    else:
+    if args.video:
         vid_writer.write(frame.astype(np.uint8))
+    else:
+        cv.imwrite(str(Path('Output', 'recognition.jpg')), frame.astype(np.uint8))
 
-    cv.imshow(winName, frame)
-    cv.waitKey(0)
+    # Uncomment the following lines to show recognition image
+    # cv.imshow(winName, frame)
+    # cv.waitKey(0)
