@@ -1,10 +1,20 @@
 import os
 from pathlib import Path
+
+import cv2
+import skimage.draw
 from PIL import Image
 from sklearn.model_selection import train_test_split
-import skimage.draw
 
-gt_train = Path('Dataset', 'GTSDB', 'Metadata', 'gt_train.txt')
+'''
+Splits the total training set into training and validation sets
+Validation set is 10% of the total training set
+Parameters:
+    path    : path of the total training set
+Returns:
+    train   : list of training images
+    val     : list of validation images
+'''
 
 
 def split_trainset(path):
@@ -24,13 +34,14 @@ Returns  :
     names   : list of names of all images
 '''
 
-path_full = Path('Dataset', 'GTSDB', 'Full')
-
 
 def image_load(path):
-    names = []  # Nomi delle immagini es. '00000.ppm'
-    imgs = []  # Immagini aperte con Image.open es. es. <PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=1360x800 at 0x7F968779DF40>
-    ir = []  # Immagini lette con skimage es. [array([[[255, 255, 255], [255, 255, 255], [255, 255, 255], ...]
+    # image names i.e. '00000.ppm'
+    names = []
+    # images loaded with Image.open i.e.<PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=1360x800 at 0x7F968779DF40>
+    imgs = []
+    # images read with skimage i.e. [array([[[255, 255, 255], [255, 255, 255], [255, 255, 255], ...]
+    ir = []
 
     for file in sorted(os.listdir(path)):
         if Path(path, file).is_file() and Path(path, file).suffix == '.ppm':
@@ -39,12 +50,6 @@ def image_load(path):
             names.append(file)
             ir.append(image)
     return imgs, names, ir
-
-
-# imgs, names = image_load(path_full)
-# for el, name in zip(imgs, names):
-#     print(el, name)
-# print(image_load(path_full))
 
 
 '''
@@ -57,8 +62,6 @@ Returns:
     annotations : final dictionary containing signs annotations
 '''
 
-ex_train = Path('Dataset', 'GTSDB', 'Metadata', 'ex.txt')
-
 
 def annotation_preprocess(path):
     annotations_dict = {}
@@ -67,17 +70,13 @@ def annotation_preprocess(path):
         for line in file.readlines():
             temp = line.strip('\n').split(';')
             annotations_list.append(temp)
-            # temp[0][:-4] + '.jpg' for images in jpg
             id = temp[0][:-4]
             if id not in annotations_dict.keys():
                 annotations_dict[id] = [(int(temp[1]), int(temp[2]), int(temp[3]), int(temp[4]), int(temp[5]))]
             else:
-                # annotations_dict[temp[0]].append(int(temp[5]))
                 annotations_dict[id].append((int(temp[1]), int(temp[2]), int(temp[3]), int(temp[4]), int(temp[5])))
     return annotations_dict, annotations_list
 
-
-# print(annotation_preprocess(gt_train)[1])
 
 '''
 Converts a .ppm image and saves it in .jpg format
@@ -86,13 +85,53 @@ Parameters:
     file:   image file name
 '''
 
-def ppm2jpg(path, file):
-    # path = Path('Dataset', 'GTSDB', 'Train')
-    # path2 = Path('Dataset', 'GTSDB', 'Train2')
 
-    # for file in os.listdir(path):
+def ppm2jpg(path, file):
+
     im = Image.open(Path(path, file))
     print(file[:-4] + '.jpg')
     im.save(Path(path, 'lello.jpg'))
 
-# ppm2jpg('Dataset/GTSRB_Test', '00000.ppm')
+
+'''
+Converts image in gray-scale format
+Parameters:
+    img:    image path
+Returns:
+    img:    gray-scaled image
+'''
+
+
+def grayscale(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return img
+
+
+'''
+Equalizes a gray-scaled image
+Parameters:
+    img:    image path
+Returns:
+    img:    equalized gray-scaled image
+'''
+
+
+def equalize(img):
+    img = cv2.equalizeHist(img)
+    return img
+
+
+'''
+Applies preprocessing functions like grayscale and equalize, then normalizes the image
+Parameters:
+    img:    image path
+Returns:
+    img:    preprocessed image
+'''
+
+
+def preprocessing(img):
+    img = grayscale(img)
+    img = equalize(img)  # STANDARDIZE THE LIGHTING IN AN IMAGE
+    img = img / 255  # TO NORMALIZE VALUES BETWEEN 0 AND 1 INSTEAD OF 0 TO 255
+    return img

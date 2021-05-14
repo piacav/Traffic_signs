@@ -11,6 +11,7 @@ from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.np_utils import to_categorical
 from sklearn.model_selection import train_test_split
+from preprocess import preprocessing
 
 import CNNs
 
@@ -92,26 +93,7 @@ plt.grid(True, linestyle='--', which='major', color='grey', alpha=.25)
 plt.show()
 
 
-# PREPROCESSING THE IMAGES
-
-def grayscale(img):
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    return img
-
-
-def equalize(img):
-    img = cv2.equalizeHist(img)
-    return img
-
-
-def preprocessing(img):
-    img = grayscale(img)
-    img = equalize(img)  # STANDARDIZE THE LIGHTING IN AN IMAGE
-    img = img / 255  # TO NORMALIZE VALUES BETWEEN 0 AND 1 INSTEAD OF 0 TO 255
-    return img
-
-
-# CREATE DATASETS
+# CREATE DATASETS AND PREPROCESS THE IMAGES
 X_train = np.array(list(map(preprocessing, X_train)))
 X_validation = np.array(list(map(preprocessing, X_validation)))
 X_test = np.array(list(map(preprocessing, X_test)))

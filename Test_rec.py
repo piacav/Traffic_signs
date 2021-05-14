@@ -9,6 +9,7 @@ from keras.models import load_model
 from keras_drop_block import DropBlock2D
 from mlxtend.plotting import plot_confusion_matrix
 from sklearn.metrics import accuracy_score, multilabel_confusion_matrix, confusion_matrix, classification_report
+from preprocess import preprocessing
 
 
 """ ENVIRONMENT VARIABLES """
@@ -19,7 +20,7 @@ names = pd.read_csv("labels.csv")["Name"].values
 gt_test = pd.read_csv(str(Path("Dataset", "GTSRB_Test", "gt_test.csv")))["ClassId"].values
 threshold = 0.9  # PROBABILITY THRESHOLD
 model_dir = "Models"
-input_shape = (48, 48)  # (32, 32) for images 32x32
+input_shape = (48, 48)
 # "class_cnn" for the first type,
 # "class_cnn_2" for the second type
 # "both" for the mean value of the scores of class_cnn and class_cnn_2
@@ -51,23 +52,6 @@ else:
                        "model_name must be a list of models. Es:['class_cnnX', 'class_cnn-2Y'] "
 
 
-def grayscale(image):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return image
-
-
-def equalize(image):
-    image = cv2.equalizeHist(image)
-    return image
-
-
-def preprocessing(image):
-    image = grayscale(image)
-    image = equalize(image)
-    image = image / 255
-    return image
-
-
 def test_single_img(image, pic):
     print('IMAGE NUMBER', pic)
     # PREDICT IMAGE
@@ -82,9 +66,6 @@ def test_single_img(image, pic):
         prediction2 = model2.predict(image)
         class_index2 = model2.predict_classes(image)
         probability_value2 = np.amax(prediction2)
-
-        # SHOW PREDICTION
-        cv2.imshow("Result", original_img)
 
         # TAKE THE AVG PROBABILITY OR THE BEST ONE
         if (probability_value1 > threshold and class_index1[0] == gt_test[int(pic)]) or \
