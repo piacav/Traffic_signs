@@ -10,10 +10,9 @@ from PIL import ImageTk, Image
 from keras.models import load_model
 
 from preprocess import preprocessing
+from Test_det import postprocess
 
 '''ENVIRONMENT VARIABLES'''
-
-model = load_model(str(Path('Models', 'class_cnn_220210503T2208')))
 names = pd.read_csv("labels.csv")["Name"].values
 
 '''Initialize GUI'''
@@ -21,7 +20,6 @@ top = tk.Tk()
 top.geometry('1200x800')
 top.title('Traffic sign classification')
 top.configure(background='#CDCDCD')
-label = Label(top, background='#CDCDCD', font=('arial', 15, 'bold'))
 sign_image = Label(top, background='#CDCDCD')
 
 '''
@@ -32,23 +30,19 @@ Parameters:
 
 
 def classify(file_path):
+    cap = cv.VideoCapture(file_path)
+    hasFrame, frame = cap.read()
+    # Create a 4D blob from a frame
+    blob = cv.dnn.blobFromImage(frame, 1 / 255, (inpWidth, inpHeight), [0, 0, 0], 1, crop=False)
 
-    image = cv2.imread(file_path)
-    image = np.asarray(image)
-    image = cv2.resize(image, (48, 48))
-    image = preprocessing(image)
-    image = image.reshape(1, 48, 48, 1)
+    # Sets the input to the network
+    net.setInput(blob)
 
-    prediction = model.predict(image)
-    class_index = model.predict_classes(image)
-    probability_value = np.amax(prediction)
-    sign = names[class_index[0]]
-    print(sign, probability_value)
-    sign = sign + '\n' + str(round(probability_value * 100, 2)) + '%'
-    if probability_value >= 0.9:
-        label.configure(foreground='#19db07', text=sign, font=('arial', 40, 'bold'), background='#CDCDCD')
-    else:
-        label.configure(foreground='#db0707', text=sign, font=('arial', 40, 'bold'), background='#CDCDCD')
+    # Runs the forward pass to get output of the output layers
+    outs = net.forward(getOutputsNames(net))
+
+    # Remove the bounding boxes with low confidence and show the predicted image in the gui
+    sign_image.image = postprocess(frame, outs)
 
 
 '''
@@ -79,7 +73,6 @@ def upload_image():
         im = ImageTk.PhotoImage(uploaded)
         sign_image.configure(image=im, width=400, height=400, background='#CDCDCD')
         sign_image.image = im
-        label.configure(text='')
         show_classify_button(file_path)
     except:
         pass
@@ -91,7 +84,6 @@ upload = Button(top, text="Upload an image", command=upload_image, padx=10, pady
 upload.configure(background='#364156', foreground='white', font=('arial', 20, 'bold'), highlightbackground='#364156')
 upload.pack(side=BOTTOM, pady=50)
 sign_image.pack(side=BOTTOM, expand=True)
-label.pack(side=BOTTOM, expand=True)
 heading = Label(top, text="Classify Traffic Sign", pady=20, font=('arial', 30, 'bold'))
 heading.configure(background='#CDCDCD', foreground='#364156')
 heading.pack()
