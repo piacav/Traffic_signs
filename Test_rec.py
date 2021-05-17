@@ -31,7 +31,7 @@ model = None
 model1 = None
 model2 = None
 
-# import the trained model
+# import the correct trained model
 if model_type == 'class_cnn':
     model = load_model(str(Path(model_dir, model_name[0])), custom_objects={'DropBlock2D': DropBlock2D})  # class_cnn
     model.summary()
@@ -46,6 +46,15 @@ elif model_type == "both":
 else:
     assert model_type, "Variable model_type must be 'class_cnn', 'class_cnn_2' or 'both'. If both, variable " \
                        "model_name must be a list of models. Es:['class_cnnX', 'class_cnn-2Y'] "
+
+"""
+
+Parameters:
+    image    : 
+    pic
+Returns:
+
+"""
 
 
 def test_single_img(image, pic):
@@ -103,10 +112,20 @@ def test_single_img(image, pic):
 
         print('Model:', model_type, '\nScore:', probability_value, '\n' + ('=' * 100))
 
-    # CHANGE IMAGE IN VISUALIZATION
-    # if cv2.waitKey(0) and 0xFF == ord('q'):
-    #     return
+        # CHANGE IMAGE IN VISUALIZATION
+        # if cv2.waitKey(0) and 0xFF == ord('q'):
+        #     return
         return str(class_index[0]) + ' - ' + str(names[class_index[0]]), probability_value
+
+
+"""
+
+Parameters:
+    image    : 
+    pic
+Returns:
+
+"""
 
 
 def test_single_img2(image):
@@ -125,6 +144,16 @@ def test_single_img2(image):
     print('Model:', model_type, '\nScore:', probability_value, '\n' + ('=' * 100))
 
     return str(class_index[0]) + ' - ' + str(names[class_index[0]]), probability_value
+
+
+"""
+
+Parameters:
+    image    : 
+    pic
+Returns:
+
+"""
 
 
 def compute_metrics(test_set, t):
@@ -167,8 +196,9 @@ def compute_metrics(test_set, t):
         FDR = FP / (TP + FP)
         # Overall accuracy for each class
         ACC = (TP + TN) / (TP + FP + FN + TN)
-        #print(cr, TN, FP, FN, TP, TPR, TNR, PPV, NPV, FAR, FRR, FDR, ACC)
+        # print(cr, TN, FP, FN, TP, TPR, TNR, PPV, NPV, FAR, FRR, FDR, ACC)
         return FRR, FAR, ACC, t
+
 
 ''' 
 # READ IMAGE

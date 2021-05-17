@@ -153,12 +153,12 @@ def postprocess(frame, outs):
         img = frame[top - 5:r_height + 5, left - 5:r_width + 5, :]
 
         # SHOW PREDICTION
-        # cv2.imshow("BBox", img)
-        # cv2.waitKey(0)
-        # cv2.destroyWindow("BBox")
+        # cv.imshow("BBox", img)
+        # cv.waitKey(0)
+        # cv.destroyWindow("BBox")
 
         # Preprocess image crop detected by b-box
-        img = cv2.resize(img, (input_shape[0], input_shape[1]))
+        img = cv.resize(img, (input_shape[0], input_shape[1]))
         img = preprocessing(img)
         img = img.reshape(1, input_shape[0], input_shape[1], 1)
 
@@ -169,9 +169,8 @@ def postprocess(frame, outs):
         drawPred(classIds[i], confidences[i], left, top, left + width, top + height, class_name, probability_val)
 
 
-# Window creation
-winName = 'Deep learning object detection in OpenCV'
-cv.namedWindow(winName, cv.WINDOW_NORMAL)
+# Window creation, uncomment to test without Colab
+# cv.namedWindow('Deep learning object detection in OpenCV', cv.WINDOW_NORMAL)
 
 # Input process
 cap = None
