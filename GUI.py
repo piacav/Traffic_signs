@@ -1,21 +1,18 @@
+import os
 import tkinter as tk
 from pathlib import Path
 from tkinter import *
 from tkinter import filedialog
 
-import cv2 as cv
-import numpy as np
 import pandas as pd
 from PIL import ImageTk, Image
-from keras.models import load_model
-from preprocess import preprocessing
-import Test_det
 
 '''ENVIRONMENT VARIABLES'''
 names = pd.read_csv("labels.csv")["Name"].values
 inpWidth = 608  # Width of network's input image
 inpHeight = 608  # Height of network's input image
-net = Test_det.net  # net of detection
+output_path = str(Path('Output', 'recognition_image.jpg'))
+# net = Test_det.net  # net of detection
 
 '''Initialize GUI'''
 top = tk.Tk()
@@ -32,7 +29,14 @@ Parameters:
 
 
 def classify(file_path):
-    cap = cv.VideoCapture(file_path)
+    command = 'python3 Test_det.py --image={}'.format(file_path)
+    os.system(command)
+    pred = Image.open(output_path)
+    pred.thumbnail(((top.winfo_width() / 2.25), (top.winfo_height() / 2.25)))
+    im = ImageTk.PhotoImage(pred)
+    sign_image.configure(image=im, width=1024, height=600, background='#CDCDCD')
+    sign_image.image = im
+    '''cap = cv.VideoCapture(file_path)
     hasFrame, frame = cap.read()
     # Create a 4D blob from a frame
     blob = cv.dnn.blobFromImage(frame, 1 / 255, (inpWidth, inpHeight), [0, 0, 0], 1, crop=False)
@@ -51,7 +55,8 @@ def classify(file_path):
     print(type(frame))
     im = ImageTk.PhotoImage(frame)
     sign_image.configure(image=im, width=1024, height=600, background='#CDCDCD')
-    sign_image.image = im
+    sign_image.image = im'''
+
 
 '''
 Shows the "Classify image" button when the image is loaded in the GUI
@@ -92,7 +97,6 @@ upload = Button(top, text="Upload an image", command=upload_image, padx=10, pady
 upload.configure(background='#364156', foreground='white', font=('arial', 20, 'bold'), highlightbackground='#364156')
 upload.pack(side=BOTTOM, pady=50)
 sign_image.pack(side=BOTTOM, expand=True)
-# pred_image.pack(side=BOTTOM, expand=True)
 heading = Label(top, text="Classify Traffic Sign", pady=20, font=('arial', 30, 'bold'))
 heading.configure(background='#CDCDCD', foreground='#364156')
 heading.pack()
