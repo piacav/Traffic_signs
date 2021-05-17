@@ -48,16 +48,21 @@ else:
                        "model_name must be a list of models. Es:['class_cnnX', 'class_cnn-2Y'] "
 
 """
-
+Predicts the class label of the street sign.
+When model_type is 'both':
+    If the predicted class is the same for both models,
+    it shows the average confidence, otherwise it shows the one with the highest confidence. 
+When model_type is class_cnn or class_cnn_2 calls test_image_specific(image)
 Parameters:
-    image    : 
-    pic
+    image    : image to predict 
+    pic      : image number 
 Returns:
-
+    String containing class index, class name 
+    probability_value : confidence of the prediction  
 """
 
 
-def test_single_img(image, pic):
+def test_img(image, pic):
     print('IMAGE NUMBER', pic)
     # PREDICT IMAGE
     # Two different models
@@ -72,7 +77,7 @@ def test_single_img(image, pic):
         class_index2 = model2.predict_classes(image)
         probability_value2 = np.amax(prediction2)
 
-        # TAKE THE AVG PROBABILITY OR THE BEST ONE
+        # Take the avg value or the best one
         if (probability_value1 > threshold and class_index1[0] == gt_test[int(pic)]) or \
                 (probability_value2 > threshold and class_index2[0] == gt_test[int(pic)]):
             if class_index1 == class_index2:
@@ -93,44 +98,24 @@ def test_single_img(image, pic):
               '\nScore:', probability_value1,
               '\nModel 2 (class_cnn_2):', class_index2[0], '-', names[class_index2[0]],
               '\nScore:', probability_value2, '\n' + ('=' * 100))
-
-    else:
-        # Only one model between class_cnn and class_cnn_2
-        prediction = model.predict(image)
-        class_index = model.predict_classes(image)
-        probability_value = np.amax(prediction)
-
-        # SHOW PREDICTION
-        # cv2.imshow("Result", original_img)
-
-        if probability_value > threshold and class_index[0] == gt_test[int(pic)]:
-            detected_class = str(class_index[0]) + ' - ' + str(names[class_index[0]])
-            print('DETECTED CORRECT CLASS:', detected_class)
-        else:
-            print('DETECTION FAILED:', class_index[0], '-', names[class_index[0]],
-                  '\nCORRECT CLASS:', gt_test[int(pic)], '-', names[gt_test[int(pic)]])
-
-        print('Model:', model_type, '\nScore:', probability_value, '\n' + ('=' * 100))
-
-        # CHANGE IMAGE IN VISUALIZATION
-        # if cv2.waitKey(0) and 0xFF == ord('q'):
-        #     return
         return str(class_index[0]) + ' - ' + str(names[class_index[0]]), probability_value
+    else:
+        return test_img_specific(image)
 
 
 """
-
+Predicts the class label of the street sign using one specific model defined in the environment variable model_type
 Parameters:
-    image    : 
-    pic
+    image    : image to predict 
 Returns:
-
+    String containing class index, class name 
+    probability_value : confidence of the prediction  
 """
 
 
-def test_single_img2(image):
-    # PREDICT IMAGE
-    # Only one model between class_cnn and class_cnn_2
+def test_img_specific(image):
+    # Change model_type to change the model
+
     prediction = model.predict(image)
     class_index = model.predict_classes(image)
     probability_value = np.amax(prediction)
@@ -147,17 +132,20 @@ def test_single_img2(image):
 
 
 """
-
+Compute metrics 
 Parameters:
-    image    : 
-    pic
+    test_set    : list of images to test
+    t           : threshold
 Returns:
-
+    FRR         : False rejection rate 
+    FAR         : False acceptance rate
+    ACC         : Accuracy
+    t           : threshold
 """
 
 
 def compute_metrics(test_set, t):
-    # Prediction for the all dataset
+    # Preprocessing and reshape of the images in train set
     test_set = np.array(list(map(preprocessing, test_set)))
     test_set = test_set.reshape((test_set.shape[0], test_set.shape[1], test_set.shape[2], 1))
 
@@ -219,7 +207,7 @@ for picture in sorted(os.listdir(test_set_dir)):
     img = img.reshape(1, input_shape[0], input_shape[1], 1)
 
     # Test every image in test-set
-    # test_single_img(img, name_pic)
+    # test_img(img, name_pic)
 
 X_test = np.array(data)
 # compute_metrics(X_test)

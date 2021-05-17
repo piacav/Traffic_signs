@@ -163,7 +163,7 @@ def postprocess(frame, outs):
         img = img.reshape(1, input_shape[0], input_shape[1], 1)
 
         # Predict traffic sign in the crop using recognition model
-        class_name, probability_val = test_single_img2(np.asarray(img))
+        class_name, probability_val = test_img_specific(np.asarray(img))
 
         # Draw prediction
         drawPred(classIds[i], confidences[i], left, top, left + width, top + height, class_name, probability_val)
