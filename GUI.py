@@ -3,17 +3,19 @@ from pathlib import Path
 from tkinter import *
 from tkinter import filedialog
 
-import cv2
+import cv2 as cv
 import numpy as np
 import pandas as pd
 from PIL import ImageTk, Image
 from keras.models import load_model
-
 from preprocess import preprocessing
-from Test_det import postprocess
+import Test_det
 
 '''ENVIRONMENT VARIABLES'''
 names = pd.read_csv("labels.csv")["Name"].values
+inpWidth = 608  # Width of network's input image
+inpHeight = 608  # Height of network's input image
+net = Test_det.net  # net of detection
 
 '''Initialize GUI'''
 top = tk.Tk()
@@ -39,11 +41,17 @@ def classify(file_path):
     net.setInput(blob)
 
     # Runs the forward pass to get output of the output layers
-    outs = net.forward(getOutputsNames(net))
+    outs = net.forward(Test_det.getOutputsNames(net))
 
     # Remove the bounding boxes with low confidence and show the predicted image in the gui
-    sign_image.image = postprocess(frame, outs)
-
+    Test_det.postprocess(frame, outs)
+    frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+    frame = Image.fromarray(np.uint8(frame))
+    frame.thumbnail(((top.winfo_width() / 2.25), (top.winfo_height() / 2.25)))
+    print(type(frame))
+    im = ImageTk.PhotoImage(frame)
+    sign_image.configure(image=im, width=1024, height=600, background='#CDCDCD')
+    sign_image.image = im
 
 '''
 Shows the "Classify image" button when the image is loaded in the GUI
@@ -68,10 +76,10 @@ def upload_image():
     try:
         file_path = filedialog.askopenfilename()
         uploaded = Image.open(file_path)
-        uploaded = uploaded.resize((400, 400), Image.ANTIALIAS)
         uploaded.thumbnail(((top.winfo_width() / 2.25), (top.winfo_height() / 2.25)))
+        print(type(uploaded))
         im = ImageTk.PhotoImage(uploaded)
-        sign_image.configure(image=im, width=400, height=400, background='#CDCDCD')
+        sign_image.configure(image=im, width=1024, height=600, background='#CDCDCD')
         sign_image.image = im
         show_classify_button(file_path)
     except:
@@ -84,6 +92,7 @@ upload = Button(top, text="Upload an image", command=upload_image, padx=10, pady
 upload.configure(background='#364156', foreground='white', font=('arial', 20, 'bold'), highlightbackground='#364156')
 upload.pack(side=BOTTOM, pady=50)
 sign_image.pack(side=BOTTOM, expand=True)
+# pred_image.pack(side=BOTTOM, expand=True)
 heading = Label(top, text="Classify Traffic Sign", pady=20, font=('arial', 30, 'bold'))
 heading.configure(background='#CDCDCD', foreground='#364156')
 heading.pack()
