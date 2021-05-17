@@ -1,16 +1,12 @@
-import os
 from pathlib import Path
 
-import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from keras.models import load_model
 from keras_drop_block import DropBlock2D
-from mlxtend.plotting import plot_confusion_matrix
-from sklearn.metrics import accuracy_score, multilabel_confusion_matrix, confusion_matrix, classification_report
-from preprocess import preprocessing
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
+from preprocess import preprocessing
 
 """ ENVIRONMENT VARIABLES """
 
