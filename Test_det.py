@@ -90,12 +90,13 @@ def drawPred(classId, conf_det, left, top, right, bottom, class_rec, conf_rec):
     # Create the label for recognition
     label_rec = str(class_rec) + ' ' + str(round(conf_rec, 2))
 
-    # Display the recognition label at the top of the bounding box
-    labelSize, baseLine = cv.getTextSize(label_rec, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-    top = max(top, labelSize[1])
-    cv.rectangle(frame, (left, top - round(1.5 * labelSize[1])), (left + round(1.5 * labelSize[0]), top + baseLine),
-                 (0, 0, 255), cv.FILLED)
-    cv.putText(frame, label_rec, (left, top), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+    if conf_rec > threshold:
+        # Display the recognition label at the top of the bounding box
+        labelSize, baseLine = cv.getTextSize(label_rec, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+        top = max(top, labelSize[1])
+        cv.rectangle(frame, (left, top - round(1.5 * labelSize[1])), (left + round(1.5 * labelSize[0]), top + baseLine),
+                     (0, 0, 255), cv.FILLED)
+        cv.putText(frame, label_rec, (left, top), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
 
 
 """
@@ -150,7 +151,7 @@ def postprocess(frame, outs):
         height = box[3]
         r_width = left + width
         r_height = top + height
-        img = frame[top - 5:r_height + 5, left - 5:r_width + 5, :]
+        img = frame[max(top - 5, 0):min(r_height + 5, len(frame)), max(0, left - 5):min(r_width + 5, len(frame[0])), :]
 
         # SHOW PREDICTION
         # cv.imshow("BBox", img)
