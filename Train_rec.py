@@ -26,7 +26,7 @@ img_dim = (48, 48, 3)
 input_shape = (48, 48, 1)
 test_ratio = 0.2
 validation_ratio = 0.2
-model_type = "class_cnn_2"  # "class_cnn_2" for the second type
+model_type = "class_cnn_2"  # "class_cnn" for the second type
 
 """ PREPROCESS AND PREPARATION """
 

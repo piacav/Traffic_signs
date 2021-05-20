@@ -20,7 +20,7 @@ input_shape = (48, 48)
 # "class_cnn" for the first type,
 # "class_cnn_2" for the second type
 # "both" for the mean value of the scores of class_cnn and class_cnn_2
-model_type = "class_cnn_2"
+model_type = "class_cnn"
 # A list of one model or 2 models.
 # If model_type = 'class_cnn', model_name is something like ["class_cnn20210503T2012"]
 # If model_type = 'class_cnn_2', model_name is something like ["class_cnn_220210503T2208"]
